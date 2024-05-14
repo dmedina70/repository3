@@ -7,18 +7,23 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.sql.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.Color;
 
-public class ModifyWindows extends JFrame {
+public class ModifyPatientInformationWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -34,7 +39,10 @@ public class ModifyWindows extends JFrame {
 	private JTextField allergy2Txt;
 	private JTextField allergy3Txt;
 	private JTextField address2Txt;
+	private JButton btnUpdate;
+	private JButton btnUpdatePhoto;
 	private Patient results;
+	private String photo;
 	
 	PatientQuery query = new PatientQuery();
 
@@ -45,7 +53,7 @@ public class ModifyWindows extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ModifyWindows frame = new ModifyWindows();
+					ModifyPatientInformationWindow frame = new ModifyPatientInformationWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,23 +65,31 @@ public class ModifyWindows extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ModifyWindows() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 757, 394);
+	public ModifyPatientInformationWindow() {
+		setTitle("Modify Patient Information");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 749, 392);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		
-		JButton btnNewButton = new JButton("Search ssn");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnSearchSsn = new JButton("Search ssn");
+		btnSearchSsn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
 				String ssn = JOptionPane.showInputDialog("Enter SSN to search");
 				results = query.searchForPatientBySsn(ssn);
+				
+				// Check if the user pressed cancel or closed the dialog
+			    if (ssn == null) {
+			        return; // Do nothing
+			    }
 				if(results == null) {
 					JOptionPane.showMessageDialog(null, "SSN not found!");
 				}
 				else {
+				
 					ssnTxt.setText(results.getSsn());
 					firstNameTxt.setText(results.getFirstName());
 					lastNameTxt.setText(results.getLastName());
@@ -83,36 +99,44 @@ public class ModifyWindows extends JFrame {
 					cityTxt.setText(results.getCity());
 					zipCodeTxt.setText(results.getZipcode());
 					allergy1Txt.setText(results.getAllergy1());
-					allergy2Txt.setText(results.getAllegry2());
-					allergy3Txt.setText(results.getAllegry3());
+					allergy2Txt.setText(results.getAllergy2());
+					allergy3Txt.setText(results.getAllergy3());
 					address2Txt.setText(results.getAddress2());;
+					
+					btnUpdate.setVisible(true);
+					btnUpdatePhoto.setVisible(true);
 					
 				}
 				
 			}
 		});
 		
-		JButton btnNewButton_1 = new JButton("Update");
-		btnNewButton_1.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		     
-		    
-		        results.setFirstName(firstNameTxt.getText()); // Set first name
-		        results.setLastName(lastNameTxt.getText()); // Set last name
-		        results.setDob(Date.valueOf(dobTxt.getText())); // Set date of birth (ensure format is yyyy-mm-dd)
-		        results.setPhoneNumber(phoneNumberTxt.getText()); // Set phone number
-		        results.setAddress1(address1Txt.getText()); // Set address line 1
-		        results.setAddress2(address2Txt.getText()); // Set address line 2
-		        results.setCity(cityTxt.getText()); // Set city
-		        results.setZipcode(zipCodeTxt.getText()); // Set zipcode
-		        results.setAllergy1(allergy1Txt.getText()); // Set allergy 1
-		        results.setAllegry2(allergy2Txt.getText()); // Set allergy 2
-		        results.setAllegry3(allergy3Txt.getText()); // Set allergy 3
-		        
-		        // Assuming you have a method to handle the update with a patient object
-		        updatePatientFromUI(results);
-		    }
-		});
+		btnUpdate = new JButton("Update");
+		btnUpdate.setVisible(false);
+		btnUpdate.addActionListener(new ActionListener() {
+			 public void actionPerformed(ActionEvent e) {
+			     
+				    
+			        results.setFirstName(firstNameTxt.getText()); // Set first name
+			        results.setLastName(lastNameTxt.getText()); // Set last name
+			        results.setDob(Date.valueOf(dobTxt.getText())); // Set date of birth (ensure format is yyyy-mm-dd)
+			        results.setPhoneNumber(phoneNumberTxt.getText()); // Set phone number
+			        results.setAddress1(address1Txt.getText()); // Set address line 1
+			        results.setAddress2(address2Txt.getText()); // Set address line 2
+			        results.setCity(cityTxt.getText()); // Set city
+			        results.setZipcode(zipCodeTxt.getText()); // Set zipcode
+			        results.setAllergy1(allergy1Txt.getText()); // Set allergy 1
+			        results.setAllergy2(allergy2Txt.getText()); // Set allergy 2
+			        results.setAllergy3(allergy3Txt.getText()); // Set allergy 3
+			        results.setPhoto(photo); //Set Photo
+			        
+			        // Assuming you have a method to handle the update with a patient object
+			        updatePatientFromUI(results);
+			        
+			        btnUpdate.setVisible(false);
+			        btnUpdatePhoto.setVisible(false);
+			    }
+			});
 
 
 		
@@ -177,8 +201,22 @@ public class ModifyWindows extends JFrame {
 		
 		JLabel lblNewLabel_10_1 = new JLabel("allergy3");
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0), 6));
+	    btnUpdatePhoto = new JButton("Update Photo");
+	    btnUpdatePhoto.setVisible(false);
+		btnUpdatePhoto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				    "PNG File", "png");
+				chooser.setFileFilter(filter);
+				int returnVal = chooser.showOpenDialog(null);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+				       photo = chooser.getSelectedFile().getName();
+				}
+			}
+		});
+		
+		JLabel lblPhoto = new JLabel("Photo");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -210,7 +248,7 @@ public class ModifyWindows extends JFrame {
 								.addComponent(ssnTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(91))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(btnNewButton)
+							.addComponent(btnSearchSsn)
 							.addGap(43)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
@@ -226,91 +264,106 @@ public class ModifyWindows extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblNewLabel_7)
-								.addComponent(lblNewLabel_8)
-								.addComponent(lblNewLabel_6))
+								.addComponent(lblNewLabel_6)
+								.addComponent(lblNewLabel_8))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(address2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(address2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(50)
+									.addComponent(lblPhoto)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnUpdatePhoto))
 								.addComponent(cityTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(zipCodeTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(16)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnNewButton_1)
+								.addComponent(btnUpdate)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblNewLabel_10_1)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(allergy3Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
-					.addGap(27)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE)
-					.addGap(121))
+					.addGap(152))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(14)
+					.addGap(25)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(ssnTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel)
-										.addComponent(lblNewLabel_6)
-										.addComponent(address2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(firstNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_1)
-										.addComponent(lblNewLabel_7)
-										.addComponent(cityTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lastNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_2)
-										.addComponent(lblNewLabel_8)
-										.addComponent(zipCodeTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(dobTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(phoneNumberTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_4)))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(allergy1Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_9))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(allergy2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_10))))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(ssnTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel)
+								.addComponent(lblNewLabel_6)
+								.addComponent(address2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblPhoto)
+								.addComponent(btnUpdatePhoto))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel_5)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(address1Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(allergy3Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblNewLabel_10_1)))))
-					.addPreferredGap(ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(firstNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_1)
+								.addComponent(lblNewLabel_7)
+								.addComponent(cityTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lastNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_2)
+								.addComponent(lblNewLabel_8)
+								.addComponent(zipCodeTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(dobTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_3))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(phoneNumberTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_4)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(allergy1Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_9))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(allergy2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_10))))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel_5)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(address1Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(allergy3Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblNewLabel_10_1)))
+					.addPreferredGap(ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton)
-						.addComponent(btnNewButton_1))
+						.addComponent(btnSearchSsn)
+						.addComponent(btnUpdate))
 					.addGap(56))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
 	
+	private void resetFields() {
+	    ssnTxt.setText("");
+	    firstNameTxt.setText("");
+	    lastNameTxt.setText("");
+	    dobTxt.setText("");
+	    phoneNumberTxt.setText("");
+	    address1Txt.setText("");
+	    address2Txt.setText("");
+	    cityTxt.setText("");
+	    zipCodeTxt.setText("");
+	    allergy1Txt.setText("");
+	    allergy2Txt.setText("");
+	    allergy3Txt.setText("");
+	}
+	
 	public void updatePatientFromUI(Patient pantient) {
 	    try {
-	      // Assuming the 'query' object is an instance that has the updatePatientInformation method
 	        query.updatePatientInformation(pantient);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        JOptionPane.showMessageDialog(null, "Error updating patient information: " + e.getMessage());
 	    }
 	}
-
 }

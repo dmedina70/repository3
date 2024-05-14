@@ -12,7 +12,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-public class DisplayAllPatient extends JFrame {
+public class DisplayAllPatientWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -26,7 +26,7 @@ public class DisplayAllPatient extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DisplayAllPatient frame = new DisplayAllPatient();
+					DisplayAllPatientWindow frame = new DisplayAllPatientWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,14 +38,15 @@ public class DisplayAllPatient extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DisplayAllPatient() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+	public DisplayAllPatientWindow() {
+		setTitle("Display All Patient");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 1310, 649);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		List<Patient> result = query.getAllPatient();
-		String[] columnNames = {"ssn", "firstname", "lastname", "dob", "phone number", "address1", "address2", "city"};
+		String[] columnNames = {"ssn", "firstname", "lastname", "dob", "phone number", "address1", "address2", "city", "photo"};
 		Object[][] rowData = new Object[result.size()][columnNames.length];
 
 		// Populate rowData with data from the result list
@@ -59,6 +60,7 @@ public class DisplayAllPatient extends JFrame {
 		    rowData[i][5] = patient.getAddress1();
 		    rowData[i][6] = patient.getAddress2();
 		    rowData[i][7] = patient.getCity();
+		    rowData[i][8] = patient.getPhoto();
 		}
 
 		// Create the DefaultTableModel with column names and rowData
@@ -73,15 +75,15 @@ public class DisplayAllPatient extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 382, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(32, Short.MAX_VALUE))
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1243, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(31, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(26)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 206, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(19, Short.MAX_VALUE))
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(129, Short.MAX_VALUE))
 		);
 		
 		table = new JTable(model);
