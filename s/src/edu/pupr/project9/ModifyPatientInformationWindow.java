@@ -130,7 +130,7 @@ public class ModifyPatientInformationWindow extends JFrame {
 			        results.setAllergy3(allergy3Txt.getText()); // Set allergy 3
 			        results.setPhoto(photo); //Set Photo
 			        
-			        // Assuming you have a method to handle the update with a patient object
+			        
 			        updatePatientFromUI(results);
 			        
 			        btnUpdate.setVisible(false);
