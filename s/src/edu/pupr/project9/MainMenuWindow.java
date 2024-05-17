@@ -54,7 +54,7 @@ public class MainMenuWindow extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Add Patient");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AddPatientWindow.main(null);
+				NewPatient.main(null);
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);

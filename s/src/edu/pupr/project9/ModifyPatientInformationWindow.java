@@ -45,6 +45,7 @@ public class ModifyPatientInformationWindow extends JFrame {
 	private String photo;
 	
 	PatientQuery query = new PatientQuery();
+	private JTextField txtPhoto;
 
 	/**
 	 * Launch the application.
@@ -68,7 +69,7 @@ public class ModifyPatientInformationWindow extends JFrame {
 	public ModifyPatientInformationWindow() {
 		setTitle("Modify Patient Information");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 749, 392);
+		setBounds(100, 100, 867, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -102,6 +103,7 @@ public class ModifyPatientInformationWindow extends JFrame {
 					allergy2Txt.setText(results.getAllergy2());
 					allergy3Txt.setText(results.getAllergy3());
 					address2Txt.setText(results.getAddress2());;
+					txtPhoto.setText(photo);
 					
 					btnUpdate.setVisible(true);
 					btnUpdatePhoto.setVisible(true);
@@ -212,11 +214,16 @@ public class ModifyPatientInformationWindow extends JFrame {
 				int returnVal = chooser.showOpenDialog(null);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 				       photo = chooser.getSelectedFile().getName();
+				       txtPhoto.setText(photo);
 				}
 			}
 		});
 		
 		JLabel lblPhoto = new JLabel("Photo");
+		
+		txtPhoto = new JTextField();
+		txtPhoto.setEnabled(false);
+		txtPhoto.setColumns(10);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -272,7 +279,9 @@ public class ModifyPatientInformationWindow extends JFrame {
 									.addComponent(address2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addGap(50)
 									.addComponent(lblPhoto)
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGap(18)
+									.addComponent(txtPhoto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(7)
 									.addComponent(btnUpdatePhoto))
 								.addComponent(cityTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(zipCodeTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
@@ -284,7 +293,7 @@ public class ModifyPatientInformationWindow extends JFrame {
 									.addComponent(lblNewLabel_10_1)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(allergy3Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
-					.addGap(152))
+					.addGap(45))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -298,7 +307,8 @@ public class ModifyPatientInformationWindow extends JFrame {
 								.addComponent(lblNewLabel_6)
 								.addComponent(address2Txt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblPhoto)
-								.addComponent(btnUpdatePhoto))
+								.addComponent(btnUpdatePhoto)
+								.addComponent(txtPhoto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(firstNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
