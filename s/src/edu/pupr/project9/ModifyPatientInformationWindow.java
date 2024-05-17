@@ -137,6 +137,8 @@ public class ModifyPatientInformationWindow extends JFrame {
 			        
 			        btnUpdate.setVisible(false);
 			        btnUpdatePhoto.setVisible(false);
+			        
+			        resetFields();
 			    }
 			});
 

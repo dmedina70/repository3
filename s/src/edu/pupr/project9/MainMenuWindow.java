@@ -37,7 +37,7 @@ public class MainMenuWindow extends JFrame {
 		});
 	}
 
-	/**
+	/**Project Abstract
 	 * Create the frame.
 	 */
 	public MainMenuWindow() {
@@ -100,9 +100,19 @@ public class MainMenuWindow extends JFrame {
 		menuBar.add(mnNewMenu_1);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("About");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AboutWindow.main(null);
+			}
+		});
 		mnNewMenu_1.add(mntmNewMenuItem_3);
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Help Content");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HelpContent.main(null);
+			}
+		});
 		mnNewMenu_1.add(mntmNewMenuItem_4);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
